@@ -45,6 +45,7 @@ module top (
     .tx_data    (tx_data),
     .tx_request (beat),
   );
+  defparam uart.BAUD_RATE = 115200;
 
   // `heartbeat` drives the `beat` line HIGH for one cycle every second.
   Heartbeat  heartbeat (

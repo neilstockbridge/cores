@@ -25,8 +25,12 @@ module UART (
   parameter  TX_STATE_IDLE =          0;
   parameter  TX_STATE_TRANSMITTING =  1;
 
+  parameter  CLK_RATE = 12*1000*1000;
+  parameter  BAUD_RATE = 9600;
+  // For baud rates lower than 9600, check that `tx_countdown` has enough bits
+  // to store CLK_DIV.
   // When `clk` is 12 MHz, dividing by 1250 yields exactly 9600 bps
-  parameter  CLK_DIV = 1250;
+  parameter  CLK_DIV = CLK_RATE / BAUD_RATE;
 
   // The frame currently being transmitted.  If this is changed during a
   // transmission then it will screw up the transmission but that's OK because
@@ -34,8 +38,8 @@ module UART (
   reg [10:0]  frame = framed (8'h00);
   // The bit position in `frame` that is being driven on tx_line right now
   reg [3:0]   frame_bit_id = 0;
-  reg [1:0]   tx_state = TX_STATE_IDLE;
-  reg [11:0]  tx_countdown = CLK_DIV;  // 1250 >> 12 is 0, so 12 bits is enough
+  reg         tx_state = TX_STATE_IDLE;
+  reg [11:0]  tx_countdown = CLK_DIV;
 
   assign  tx_line = frame [frame_bit_id];
 
