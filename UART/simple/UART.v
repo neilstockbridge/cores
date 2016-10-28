@@ -1,23 +1,7 @@
-/*
 
-My first try at a UART.  Transmit ASCII '.' roughly once a second
-
-- https://en.wikipedia.org/wiki/RS-232
-- Build this in a sid root (latest arachne-pnr)
-- The clock at `ext_clk` is 12 MHz
-
-Questions:
-
-  - Should the TXD line be driven by an intermediate register or is it OK to be
-    driven directly from the `frame` register (as long as we accept that a
-    change to `frame` during a transmission will change a bit on the line at a
-    non-baud boundary).
-
-  - Is it more efficient to count down to zero than to compare to a target value?
-
-*/
-
-
+// Constructs a frame given the data to transmit.  Saves writing this
+// assignment in three separate places.
+//
 function [10:0] framed;
   input [7:0] data;
   // One START bit, LOW.  8 data bits and two STOP bits, HIGH.  LSB on RHS
